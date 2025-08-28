@@ -92,7 +92,7 @@ def create_run_script(project_dir):
         script_content = """@echo off
 call venv\Scripts\activate.bat
 echo Starting Drools API...
-uvicorn api_main:app --host 0.0.0.0 --port 8503 --reload
+uvicorn api_drools:app --host 0.0.0.0 --port 8503 --reload
 """
         script_path = project_dir / "run_api.bat"
     else:
