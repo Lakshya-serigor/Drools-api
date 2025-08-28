@@ -1,0 +1,94 @@
+```drl
+package tax.rules
+
+import MarylandForm502;
+
+rule "Calculate Local County Tax Line 28"
+when
+    $form : MarylandForm502(
+        $taxableNetIncome : line20TaxableNetIncome,
+        $county : addresses.marylandPhysical.county
+    )
+then
+    double localTaxRate = 0.0;
+    switch ($county) {
+        case "Baltimore City":
+            localTaxRate = 0.0320;
+            break;
+        case "Allegany County":
+            localTaxRate = 0.0303;
+            break;
+        case "Anne Arundel County":
+            // TODO: missing rate for Anne Arundel County
+            break;
+        case "Baltimore County":
+            localTaxRate = 0.0320;
+            break;
+        case "Calvert County":
+            localTaxRate = 0.0320;
+            break;
+        case "Caroline County":
+            localTaxRate = 0.0320;
+            break;
+        case "Carroll County":
+            localTaxRate = 0.0303;
+            break;
+        case "Cecil County":
+            localTaxRate = 0.0274;
+            break;
+        case "Charles County":
+            localTaxRate = 0.0303;
+            break;
+        case "Dorchester County":
+            localTaxRate = 0.0320;
+            break;
+        case "Frederick County":
+            // TODO: missing rate for Frederick County
+            break;
+        case "Garrett County":
+            localTaxRate = 0.0265;
+            break;
+        case "Harford County":
+            localTaxRate = 0.0306;
+            break;
+        case "Howard County":
+            localTaxRate = 0.0320;
+            break;
+        case "Kent County":
+            localTaxRate = 0.0320;
+            break;
+        case "Montgomery County":
+            localTaxRate = 0.0320;
+            break;
+        case "Prince George’s County":
+            localTaxRate = 0.0320;
+            break;
+        case "Queen Anne’s County":
+            localTaxRate = 0.0320;
+            break;
+        case "St. Mary’s County":
+            localTaxRate = 0.0320;
+            break;
+        case "Somerset County":
+            localTaxRate = 0.0320;
+            break;
+        case "Talbot County":
+            localTaxRate = 0.0240;
+            break;
+        case "Washington County":
+            localTaxRate = 0.0295;
+            break;
+        case "Wicomico County":
+            localTaxRate = 0.0320;
+            break;
+        case "Worcester County":
+            localTaxRate = 0.0225;
+            break;
+        default:
+            // TODO: handle unknown county
+            break;
+    }
+    double localTax = $taxableNetIncome * localTaxRate;
+    $form.line28LocalTax = localTax;
+end
+```
