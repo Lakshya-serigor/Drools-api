@@ -5,7 +5,7 @@ VENV_DIR="venv"
 REQUIREMENTS_FILE="requirements.txt"
 LOG_FILE="drools_api.log"
 PID_FILE="drools_api.pid"
-APP_COMMAND="uvicorn api_main:app --host 0.0.0.0 --port 8503 --reload"
+APP_COMMAND="uvicorn api_drools:app --host 0.0.0.0 --port 8503 --reload"
 GIT_REPO_URL="https://github.com/Lakshya-serigor/Drools-api.git"
 PROJECT_DIR="$(pwd)"
 
