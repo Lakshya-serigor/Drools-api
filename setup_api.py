@@ -100,7 +100,7 @@ uvicorn api_drools:app --host 0.0.0.0 --port 8503 --reload
         script_content = """#!/bin/bash
 source venv/bin/activate
 echo "Starting Drools API..."
-uvicorn api_main:app --host 0.0.0.0 --port 8503 --reload
+uvicorn api_drools:app --host 0.0.0.0 --port 8503 --reload
 """
         script_path = project_dir / "run_api.sh"
 
