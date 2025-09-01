@@ -1,4 +1,4 @@
-import os, shutil
+import os
 import pickle
 import numpy as np
 import faiss
@@ -33,6 +33,7 @@ class DroolsRAGPipeline:
         return np.array(response.data[0].embedding, dtype=np.float32)
 
     def search_chunks(self, query, k=15):
+        """Search for relevant chunks with query expansion and diversity filtering"""
         e_query = f"{query} tax calculation Maryland county rate filing status income threshold deduction"
         query_embedding = self.embed_query(e_query).reshape(1, -1)
         
@@ -237,9 +238,13 @@ if __name__ == "__main__":
         pipeline.load_vector_db()
         print("✅ Pipeline initialized successfully!")
 
+        # Load form and Java model content properly
+        form_content = DroolsRAGPipeline.load_form()
+        java_model_content = DroolsRAGPipeline.load_java_model()
+
         # Test query
         query = input("Enter your query: ")
-        drools_code, chunks = pipeline.generate_drools(query,form_content, java_model_content)
+        drools_code, chunks = pipeline.generate_drools(query, form_content, java_model_content)
 
         print(f"\n📊 Retrieved {len(chunks)} chunks")
         print("\n🔧 Generated Drools Code:")
