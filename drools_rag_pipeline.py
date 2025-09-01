@@ -1,4 +1,4 @@
-import os
+import os, shutil
 import pickle
 import numpy as np
 import faiss
@@ -27,22 +27,43 @@ class DroolsRAGPipeline:
     def embed_query(self, query):
         """Generate embedding for query"""
         response = self.client.embeddings.create(
-            model="text-embedding-3-small",
+            model="text-embedding-3-large",
             input=query
         )
         return np.array(response.data[0].embedding, dtype=np.float32)
 
-    def search_chunks(self, query, k=20):
-        """Search for relevant chunks"""
-        query_embedding = self.embed_query(query).reshape(1, -1)
-        scores, indices = self.index.search(query_embedding, k)
+    def search_chunks(self, query, k=15):
+        e_query = f"{query} tax calculation Maryland county rate filing status income threshold deduction"
+        query_embedding = self.embed_query(e_query).reshape(1, -1)
+        
+        # Get more results than needed for diversity filtering
+        scores, indices = self.index.search(query_embedding, k*2)
+        
         chunks = []
+        seen_embeddings = []
+        
         for score, idx in zip(scores[0], indices[0]):
             if idx >= 0 and idx < len(self.metadata):
-                chunks.append({
-                    'content': self.metadata[idx].get('text', ''),
-                    'score': float(score)
-                })
+                # Get current chunk embedding for similarity check
+                current_emb = self.index.reconstruct(int(idx))
+                
+                # Check if too similar to already selected chunks
+                too_similar = False
+                for prev_emb in seen_embeddings:
+                    similarity = np.dot(current_emb, prev_emb)
+                    if similarity > 0.95:  # 95% similarity threshold
+                        too_similar = True
+                        break
+                
+                if not too_similar:
+                    chunks.append({
+                        'content': self.metadata[idx].get('text', ''),
+                        'score': float(score)
+                    })
+                    seen_embeddings.append(current_emb)
+                    
+                    if len(chunks) >= k:
+                        break
         return chunks
 
     @staticmethod
