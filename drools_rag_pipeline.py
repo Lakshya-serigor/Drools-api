@@ -220,10 +220,10 @@ You MUST reproduce that **exact logic**, including numeric thresholds, inside th
 
         # Generate Drools code
         response = self.client.chat.completions.create(
-            model="gpt-5",
+            model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
-            max_completion_tokens=6000
+            max_tokens=6000
         )
 
         return response.choices[0].message.content, chunks
